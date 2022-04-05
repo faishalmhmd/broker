@@ -14,7 +14,10 @@ aedes.on('publish', async function (packet, client) {
     if (client) {
         console.log(`[MESSAGE_PUBLISHED] Client ${(client ? client.id : 'BROKER_' + aedes.id)} has published message on ${packet.payload} `)
         let msg = JSON.parse(packet.payload)
-        console.log(msg.id)
+        if(msg.hasOwnProperty('id') && msg.hasOwnProperty('key')) {
+            console.log('Valid Client')
+        }
+        // console.log(msg.id)
     }
 })
 
