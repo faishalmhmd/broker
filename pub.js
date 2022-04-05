@@ -20,7 +20,8 @@ const payload = {
 }
 console.log(payload)
 client.on('connect', () => {
-            client.publish(topic,JSON.stringify(payload))
+            // client.publish(topic,JSON.stringify(payload))
+            client.publish(topic,'helloWorld')
             console.log('msg sent')
     })
 

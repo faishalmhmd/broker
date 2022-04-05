@@ -1,7 +1,8 @@
 // import module
 const aedes = require('aedes')()
 const server = require('net').createServer(aedes.handle)
-// const mqtt = require('mqtt')
+const mqtt = require('mqtt')
+const crypto = require('crypto')
 
 // configuration broker
 const port = 1883
@@ -14,9 +15,20 @@ aedes.on('publish', async function (packet, client) {
     if (client) {
         console.log(`[MESSAGE_PUBLISHED] Client ${(client ? client.id : 'BROKER_' + aedes.id)} has published message on ${packet.payload} `)
         let msg = JSON.parse(packet.payload)
+        let id = msg.id
         if(msg.hasOwnProperty('id') && msg.hasOwnProperty('key')) {
-            console.log('Valid Client')
+            if(id.includes('publisher')) {
+                console.log('sesuai format')
+
+                let option = {
+                    clientId: 'auth'
+                }
+
+                var client = mqtt.connect('mqtt://127.0.0.1::1883',option)
+
+            }
         }
+        // console.log('malicious node')
         // console.log(msg.id)
     }
 })
