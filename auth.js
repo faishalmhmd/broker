@@ -15,21 +15,33 @@ aedes.on('publish', async function (packet, client) {
     if (client) {
         console.log(`[MESSAGE_PUBLISHED] Client ${(client ? client.id : 'BROKER_' + aedes.id)} has published message on ${packet.payload} `)
         let msg = JSON.parse(packet.payload)
-        let id = msg.id
-        if(msg.hasOwnProperty('id') && msg.hasOwnProperty('key')) {
-            if(id.includes('publisher')) {
-                console.log('sesuai format')
+        
+        let isJson = payload => {
+            try{
+                JSON.parse(payload)
+            }
+            catch(e){
+                return false
+            }
+            return true
+        }
+        isJson(packet.payload)
 
-                let option = {
-                    clientId: 'auth'
+        if(isJson(packet.payload) == true) {
+            let id = msg.id
+            
+            if(msg.hasOwnProperty('id') && msg.hasOwnProperty('key')) {
+                if(id.includes('publisher')) {
+                    console.log('sesuai format')
                 }
-
-                var client = mqtt.connect('mqtt://127.0.0.1::1883',option)
-
+            }
+            else {
+                console.log('JSON cuman bukan Format yang sesuai')
             }
         }
-        // console.log('malicious node')
-        // console.log(msg.id)
+        else {
+            console.log('tidak sesuai format')
+        }
     }
 })
 

@@ -18,10 +18,15 @@ const payload = {
     'id' : option.clientId,
     'key' : pubKey
 }
+
+const maliciousPayload = {
+    'asdasdasd' : option.clientId,
+    'asdasdasd' : pubKey
+}
 console.log(payload)
 client.on('connect', () => {
-            // client.publish(topic,JSON.stringify(payload))
-            client.publish(topic,'helloWorld')
+            client.publish(topic,JSON.stringify(maliciousPayload))
+            // client.publish(topic,'helloWorld')
             console.log('msg sent')
     })
 
