@@ -16,6 +16,10 @@ aedes.on('publish', async function (packet, client) {
         console.log(`[MESSAGE_PUBLISHED] Client ${(client ? client.id : 'BROKER_' + aedes.id)} has published message on ${packet.payload} `)
         let msg = JSON.parse(packet.payload)
         
+        /* 
+        this function will return a boolean statement if payload can parsing to JSON then will return true
+        return:  boolean
+        */
         let isJson = payload => {
             try{
                 JSON.parse(payload)
@@ -25,14 +29,17 @@ aedes.on('publish', async function (packet, client) {
             }
             return true
         }
-        isJson(packet.payload)
-
+        
+        // check if payload value is JSON
         if(isJson(packet.payload) == true) {
             let id = msg.id
             
             if(msg.hasOwnProperty('id') && msg.hasOwnProperty('key')) {
                 if(id.includes('publisher')) {
                     console.log('sesuai format')
+
+                    // connection broker to auth
+                    var client = mqtt.connect('mqtt://127.0.0.1:1883')
                 }
             }
             else {
