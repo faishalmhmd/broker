@@ -19,14 +19,49 @@ const payload = {
     'key' : pubKey
 }
 
-const maliciousPayload = {
-    'asdasdasd' : option.clientId,
-    'asdasdasd' : pubKey
-}
-console.log(payload)
-client.on('connect', () => {
-            client.publish(topic,JSON.stringify(maliciousPayload))
-            // client.publish(topic,'helloWorld')
-            console.log('msg sent')
+// const maliciousPayload = {
+//     'asdasdasd' : option.clientId,
+//     'asdasdasd' : pubKey
+// }
+    
+    client.on('connect', () => {
+            client.subscribe(topic)
+            client.publish(topic,JSON.stringify(payload))
     })
 
+    client.on('message',(topic,msg) => {
+        msg = msg.toString()
+        console.log(msg)
+        /* 
+        this function will check payload or message from broker if json
+        return: none        
+        */
+        var isJson = payload => {
+            try{
+                JSON.parse(payload)
+            }
+            catch(e){
+                return false
+            }
+            return true
+        }
+        // check if payload value is JSON
+        if(isJson(msg) == true) {
+            let id = msg.id
+            
+            if(msg.hasOwnProperty('id') && msg.hasOwnProperty('key')) {
+                if(id.includes('broker')) {
+                    console.log('sesuai format')
+             
+                }
+            }
+            else {
+                console.log('JSON cuman bukan Format yang sesuai')
+            }
+        }
+        else {
+            console.log('tidak sesuai format')
+        }
+        
+    })
+    
