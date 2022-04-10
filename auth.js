@@ -25,25 +25,29 @@ aedes.on('publish', async function (packet, client) {
         this function will return a boolean statement if payload can parsing to JSON then will return true
         return:  boolean
         */
+        
+
         var publishPubKey = () => {
             const option = {
                 clientId: 'broker-1'
             }
             var client = mqtt.connect('mqtt://127.0.0.1::1883',option)
             const topic = 'auth'
-            const key = crypto.createECDH('secp256k1')
+            var key = crypto.createECDH('secp256k1')
             key.generateKeys()
-            const pubKey = key.getPublicKey().toString('base64')
+            var pubKey = key.getPublicKey().toString('base64')
             const payload = {
                     'id' :option.clientId,
                     'key':pubKey
                 }
-
+            console.log('akses properti msg',msg.key)
             client.on('connect',() => {
                     client.publish(topic,JSON.stringify(payload))
             })
         }
         
+      
+
          /* 
         this function will check payload or message from broker if json
         return: none        
@@ -61,11 +65,12 @@ aedes.on('publish', async function (packet, client) {
         // check if payload value is JSON
         if(isJson(packet.payload) == true) {
             let id = msg.id
-            
+
+
             if(msg.hasOwnProperty('id') && msg.hasOwnProperty('key')) {
                 if(id.includes('publisher')) {
-                    console.log('sesuai format')
                     publishPubKey()
+                    console.log(msg.key)
                 }
             }
             else {
@@ -75,6 +80,7 @@ aedes.on('publish', async function (packet, client) {
         else {
             console.log('tidak sesuai format')
         }
+
     }
 })
 

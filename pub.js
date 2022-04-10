@@ -52,7 +52,7 @@ const payload = {
             let id = message.id
             if(message.hasOwnProperty('id') && message.hasOwnProperty('key')) {
                 if(id.includes('broker')) {
-                    console.log('sesuai format')
+                    console.log(message.key)
                 }
             }
             else {
