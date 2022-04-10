@@ -32,6 +32,7 @@ const payload = {
     client.on('message',(topic,msg) => {
         msg = msg.toString()
         console.log(msg)
+        
         /* 
         this function will check payload or message from broker if json
         return: none        
@@ -47,17 +48,18 @@ const payload = {
         }
         // check if payload value is JSON
         if(isJson(msg) == true) {
-            let id = msg.id
-            
-            if(msg.hasOwnProperty('id') && msg.hasOwnProperty('key')) {
+            let message = JSON.parse(msg)
+            let id = message.id
+            if(message.hasOwnProperty('id') && message.hasOwnProperty('key')) {
                 if(id.includes('broker')) {
                     console.log('sesuai format')
-             
                 }
             }
             else {
                 console.log('JSON cuman bukan Format yang sesuai')
             }
+
+            
         }
         else {
             console.log('tidak sesuai format')

@@ -30,21 +30,24 @@ aedes.on('publish', async function (packet, client) {
                 clientId: 'broker-1'
             }
             var client = mqtt.connect('mqtt://127.0.0.1::1883',option)
+            const topic = 'auth'
+            const key = crypto.createECDH('secp256k1')
+            key.generateKeys()
+            const pubKey = key.getPublicKey().toString('base64')
+            const payload = {
+                    'id' :option.clientId,
+                    'key':pubKey
+                }
 
-                    const topic = 'auth'
-                    const key = crypto.createECDH('secp256k1')
-                    key.generateKeys()
-                    const pubKey = key.getPublicKey().toString('base64')
-                    const payload = {
-                        'id' : option.clientId,
-                        'key':pubKey
-                    }
-
-                    client.on('connect',() => {
-                        client.publish(topic,JSON.stringify(payload))
-                    })
+            client.on('connect',() => {
+                    client.publish(topic,JSON.stringify(payload))
+            })
         }
-
+        
+         /* 
+        this function will check payload or message from broker if json
+        return: none        
+        */
         var isJson = payload => {
             try{
                 JSON.parse(payload)
