@@ -1,6 +1,6 @@
 // import module
 const aedes = require('aedes')()
-const crypto = require('crypto')
+
 const server = require('net').createServer(aedes.handle)
 const mqtt = require('mqtt')
 
@@ -28,6 +28,7 @@ aedes.on('publish', async function (packet, client) {
         
 
         var publishPubKey = () => {
+            const crypto = require('crypto')
             const option = {
                 clientId: 'broker-1'
             }
@@ -36,11 +37,17 @@ aedes.on('publish', async function (packet, client) {
             var key = crypto.createECDH('secp256k1')
             key.generateKeys()
             var pubKey = key.getPublicKey().toString('base64')
+            const symetric_key = key.computeSecret(msg.key,'base64','hex')
             const payload = {
                     'id' :option.clientId,
                     'key':pubKey
                 }
-            console.log('akses properti msg',msg.key)
+            console.log('=============================')
+            console.log('pubKey publihser = ',msg.key)
+            console.log('pubKey Broker = ',pubKey)
+            console.log('symetric key = ',symetric_key)
+            console.log('=============================')
+
             client.on('connect',() => {
                     client.publish(topic,JSON.stringify(payload))
             })
