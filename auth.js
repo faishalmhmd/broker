@@ -43,9 +43,9 @@ aedes.on('publish', async function (packet, client) {
                     'key':pubKey
                 }
             console.log('=============================')
-            console.log('pubKey publihser = ',msg.key)
-            console.log('pubKey Broker = ',pubKey)
-            console.log('symetric key = ',symetric_key)
+            console.log(`pubKey publihser = ${msg.key}`)
+            console.log(`pubKey Broker = ${pubKey}`)
+            console.log(`symetric key = ${symetric_key}`)
             console.log('=============================')
 
             client.on('connect',() => {

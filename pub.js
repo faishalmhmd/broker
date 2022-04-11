@@ -50,9 +50,15 @@ const payload = {
         if(isJson(msg) == true) {
             let message = JSON.parse(msg)
             let id = message.id
+            
             if(message.hasOwnProperty('id') && message.hasOwnProperty('key')) {
                 if(id.includes('broker')) {
-                    console.log(message.key)
+                    const symetric_key = key.computeSecret(message.key,'base64','hex')
+                    console.log('=============================')
+                    console.log(`pubkey broker = ${message.key}`)
+                    console.log(`pubkey publisher = ${pubKey}`)
+                    console.log(`symetric key = ${symetric_key}`)
+                    console.log('=============================')
                 }
             }
             else {
