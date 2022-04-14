@@ -11,14 +11,14 @@ server.listen(port, function () {
     console.log(`MQTT Broker running on port: ${port}`)
 })
 
-aedes.on('publish', async function (packet, client) {
-    if (client) {
+aedes.on('publish', async function (packet, clientBroker) {
+    if (clientBroker) {
         /* 
         this function will publish public key from broker to topic auth
         return: none
          */
 
-        console.log(`[MESSAGE_PUBLISHED] Client ${(client ? client.id : 'BROKER_' + aedes.id)} has published message on ${packet.payload} `)
+        console.log(`[MESSAGE_PUBLISHED] Client ${(clientBroker ? clientBroker.id : 'BROKER_' + aedes.id)} has published message on ${packet.payload} `)
         let msg = JSON.parse(packet.payload)
         
         /* 
@@ -26,7 +26,6 @@ aedes.on('publish', async function (packet, client) {
         return:  boolean
         */
         
-
         var publishPubKey = () => {
             const crypto = require('crypto')
             const option = {
@@ -56,8 +55,13 @@ aedes.on('publish', async function (packet, client) {
                 })  
 
                 conn.connect(err => {
-                    if(err) throw err
-                    console.log('connected')
+                    if(err) console.log(err)
+                    let sql = `INSERT INTO t_auth(id,symetric_key) VALUES ('${clientBroker.id}','${symetric_key}')`
+                    conn.query(sql,(err,res) => {
+                        if(err) console.log(err)
+                        console.log(`inserted symetric key = ${symetric_key}`)
+                    })
+                    // console.log(clientBroker.id)
                 })
 
             client.on('connect',() => {
