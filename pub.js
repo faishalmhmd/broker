@@ -1,13 +1,25 @@
 // import library
 const mqtt = require('mqtt')
 const crypto = require('crypto')
+const fs = require('fs')
 
 // connection options
 const option = {
     clientId: 'publisher-1'
 }
+
+const option2 = {
+    clientId: 'publisher-1',
+    username: 'admin',
+    password: 'admin'
+}
+
 var client = mqtt.connect('mqtt://127.0.0.1::1883',option)
 const topic = 'auth'
+
+var clientPublish = mqtt.connect('mqtt:://127.0.0.1:1884',option2)
+const topic2 = 'payload'
+
 
 const key = crypto.createECDH('secp256k1')
 key.generateKeys()
@@ -59,6 +71,14 @@ const payload = {
                     console.log(`pubkey publisher = ${pubKey}`)
                     console.log(`symetric key = ${symetric_key}`)
                     console.log('=============================')
+                    
+
+                    fs.writeFile('key.txt', symetric_key, function (err) {
+                        if (err) return console.log(err)
+                        console.log('symetric key > key.txt')
+                      })
+                      console.log('connecting ti other port')
+                      client.end()
                 }
             }
             else {
