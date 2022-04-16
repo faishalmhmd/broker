@@ -4,37 +4,27 @@ const crypto = require('crypto')
 const fs = require('fs')
 
 // connection options
-const option = {
-    clientId: 'publisher-1'
-}
-
-const option2 = {
-    clientId: 'publisher-1',
-    username: 'admin',
-    password: 'admin'
-}
-
-var client = mqtt.connect('mqtt://127.0.0.1::1883',option)
-const topic = 'auth'
-
-var clientPublish = mqtt.connect('mqtt:://127.0.0.1:1884',option2)
-const topic2 = 'payload'
 
 
-const key = crypto.createECDH('secp256k1')
-key.generateKeys()
 
-const pubKey = key.getPublicKey().toString('base64')
+fs.readFile('key.txt','utf-8',(err,data) => {
+    if(err) {
+    const option = {
+        clientId: 'publisher-1'
+    }
+            
+    var client = mqtt.connect('mqtt://127.0.0.1::1883',option)
+    const topic = 'auth'
 
-const payload = {
-    'id' : option.clientId,
-    'key' : pubKey
-}
+    const key = crypto.createECDH('secp256k1')
+    key.generateKeys()
 
-// const maliciousPayload = {
-//     'asdasdasd' : option.clientId,
-//     'asdasdasd' : pubKey
-// }
+    const pubKey = key.getPublicKey().toString('base64')
+
+    const payload = {
+        'id' : option.clientId,
+        'key' : pubKey
+    }
     
     client.on('connect', () => {
             client.subscribe(topic)
@@ -77,7 +67,7 @@ const payload = {
                         if (err) return console.log(err)
                         console.log('symetric key > key.txt')
                       })
-                      console.log('connecting ti other port')
+                      console.log('connecting to other port')
                       client.end()
                 }
             }
@@ -93,3 +83,20 @@ const payload = {
         
     })
     
+        return
+    }
+    else{
+        console.log('koneksi ke port 1884')
+        const option = {
+            clientId: 'publisher-1'
+        }
+        const topic = 'payload'
+        var client = mqtt.connect('mqtt://127.0.0.1::1884',option)
+        
+        client.on('connect', () => {
+            client.subscribe(topic)
+        })
+    }
+})
+
+   
