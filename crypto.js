@@ -1,17 +1,11 @@
 const crypto = require('crypto')
 
-const a = crypto.createECDH('secp256k1')
-a.generateKeys()
+const aes256 = require('aes256')
 
-const b = crypto.createECDH('secp256k1')
-b.generateKeys()
+const message = 'asdasdas'
 
+const encrypted = aes256.encrypt('36e16c1499d613a91a2089c63741ba8b8586c29d8bea64b635fed4f667d277a1',message)
+console.log(`message encrypted = ${encrypted}`)
 
-const a_pub_key_base64 = a.getPublicKey().toString('base64')
-const b_pub_key_base64 = b.getPublicKey().toString('base64')
-
-// const a_shared_key = a.computeSecret(b_pub_key_base64,'base64','hex')
-const b_shared_key = b.computeSecret(a_pub_key_base64,'base64','hex')
-
-console.log(a_shared_key)
-console.log(b_shared_key)
+const decrypted = aes256.decrypt('36e16c1499d613a91a2089c63741ba8b8586c29d8bea64b635fed4f667d277a1',encrypted)
+console.log(`message decrypted = ${decrypted}`)

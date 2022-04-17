@@ -11,6 +11,7 @@ server.listen(port, function () {
     console.log(`MQTT Broker running on port: ${port}`)
 })
 
+
 aedes.on('publish', async function (packet, clientBroker) {
     if (clientBroker) {
         /* 
