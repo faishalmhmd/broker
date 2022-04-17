@@ -10,7 +10,7 @@ const aes256 = require('aes256')
 fs.readFile('key.txt','utf-8',(err,data) => {
     if(err) {
     const option = {
-        clientId: 'publisher-1'
+        clientId: 'pub-1'
     }
             
     var client = mqtt.connect('mqtt://127.0.0.1::1883',option)

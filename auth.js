@@ -89,10 +89,8 @@ aedes.on('publish', async function (packet, clientBroker) {
         // check if payload value is JSON
         if(isJson(packet.payload) == true) {
             let id = msg.id
-
-
             if(msg.hasOwnProperty('id') && msg.hasOwnProperty('key')) {
-                if(id.includes('publisher')) {
+                if(id.includes('pub')) {
                     publishPubKey()
                     console.log(msg.key)
                 }
@@ -108,18 +106,5 @@ aedes.on('publish', async function (packet, clientBroker) {
     }
 })
 
-
-// var client = mqtt.connect('mqtt://127.0.0.1::1883')
-// const topic = 'payload'
-// const topicAuth = 'auth'
-
-// client.on('message',(topicAuth,msg) => {
-//     msg = msg.toString()
-//     console.log(msg)
-// })
-
-// client.on('connect',() => {
-//     client.subscribe(topicAuth)
-// })
 
 
