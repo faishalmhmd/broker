@@ -6,9 +6,6 @@ const {exec} = require('child_process')
 const { stdout } = require('process')
 const aes256 = require('aes256')
 
-// connection options
-
-
 
 fs.readFile('key.txt','utf-8',(err,data) => {
     if(err) {
@@ -99,9 +96,9 @@ fs.readFile('key.txt','utf-8',(err,data) => {
     }
     else{
         console.log('koneksi ke port 1884')
-        const key = 'hehehe'
-        const usrnm = aes256.encrypt(key,'username')
-        const psrwd = aes256.encrypt(key,'password')
+        const key = data
+        const usrnm = aes256.encrypt(key,'admin')
+        const psrwd = aes256.encrypt(key,'admin')
         const option = {
             clientId: 'publisher-1',
             username: usrnm,
