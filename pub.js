@@ -7,7 +7,7 @@ const { stdout } = require('process')
 const aes256 = require('aes256')
 
 
-fs.readFile('key.txt','utf-8',(err,data) => {
+fs.readFile('pubkey.txt','utf-8',(err,data) => {
     if(err) {
     const option = {
         clientId: 'pub-1'
@@ -63,7 +63,7 @@ fs.readFile('key.txt','utf-8',(err,data) => {
                     console.log('=============================')
                     
 
-                    fs.writeFile('key.txt', symetric_key, function (err) {
+                    fs.writeFile('pubkey.txt', symetric_key, function (err) {
                         if (err) return console.log(err)
                         console.log('symetric key > key.txt')
                       })
@@ -100,7 +100,7 @@ fs.readFile('key.txt','utf-8',(err,data) => {
         const usrnm = aes256.encrypt(key,'admin')
         const psrwd = aes256.encrypt(key,'admin')
         const option = {
-            clientId: 'publisher-1',
+            clientId: 'pub-1',
             username: usrnm,
             password: psrwd
         }

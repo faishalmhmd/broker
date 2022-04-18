@@ -7,10 +7,10 @@ const { stdout } = require('process')
 const aes256 = require('aes256')
 
 
-fs.readFile('key.txt','utf-8',(err,data) => {
+fs.readFile('subkey.txt','utf-8',(err,data) => {
     if(err) {
     const option = {
-        clientId: 'publisher-1'
+        clientId: 'sub-2'
     }
             
     var client = mqtt.connect('mqtt://127.0.0.1::1883',option)
@@ -63,14 +63,14 @@ fs.readFile('key.txt','utf-8',(err,data) => {
                     console.log('=============================')
                     
 
-                    fs.writeFile('key.txt', symetric_key, function (err) {
+                    fs.writeFile('subkey.txt', symetric_key, function (err) {
                         if (err) return console.log(err)
-                        console.log('symetric key > key.txt')
+                        console.log('symetric key > subkey.txt')
                       })
                       console.log('connecting to other port')
                       client.end()
-                    // re-executing file pub
-                      exec('node pub',(error,stdout) => {
+                    // re-executing file sub
+                      exec('node sub',(error,stdout) => {
                           if(error) {
                               console.log(`error ${error}`)
                               return
@@ -100,7 +100,7 @@ fs.readFile('key.txt','utf-8',(err,data) => {
         const usrnm = aes256.encrypt(key,'admin')
         const psrwd = aes256.encrypt(key,'admin')
         const option = {
-            clientId: 'publisher-1',
+            clientId: 'sub-2',
             username: usrnm,
             password: psrwd
         }

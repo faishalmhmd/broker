@@ -2,7 +2,8 @@
 const aedes = require('aedes')()
 const server = require('net').createServer(aedes.handle)
 const mqtt = require('mqtt')
-const mysql = require('mysql')
+const mysql = require('mysql')            
+const crypto = require('crypto')
 
 // configuration broker
 const port = 1883
@@ -28,7 +29,6 @@ aedes.on('publish', async function (packet, clientBroker) {
         */
         
         var publishPubKey = () => {
-            const crypto = require('crypto')
             const option = {
                 clientId: 'broker-1'
             }
@@ -67,6 +67,7 @@ aedes.on('publish', async function (packet, clientBroker) {
 
             client.on('connect',() => {
                     client.publish(topic,JSON.stringify(payload))
+                    client.end()
             })
         }
         
@@ -90,10 +91,15 @@ aedes.on('publish', async function (packet, clientBroker) {
         if(isJson(packet.payload) == true) {
             let id = msg.id
             if(msg.hasOwnProperty('id') && msg.hasOwnProperty('key')) {
-                if(id.includes('pub')) {
+                if(id.includes('sub')) {
                     publishPubKey()
-                    console.log(msg.key)
+                    console.log(`for sub = ${msg.key}`)
                 }
+                else if(id.includes('pub')) {
+                    publishPubKey()
+                    console.log(`for pub = ${msg.key}`)
+                }
+
             }
             else {
                 console.log('JSON cuman bukan Format yang sesuai')
