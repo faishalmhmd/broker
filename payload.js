@@ -15,17 +15,23 @@ var conn = mysql.createConnection({
     database: 'db_auth'
 })  
 
+
+conn.connect(err => {
+    if(err) console.log(err)
+    conn.query(`SELECT * FROM t_auth WHERE id like '%sub%'`,(err,res) => {
+        if(err) console.log(err)
+        res.forEach(el => {
+            console.log(el.id)
+        })
+    })
+})
+
 server.listen(port, function () {
     console.log(`MQTT Broker running on port: ${port}`)
 })
 
 aedes.authenticate = (client, username, password, callback) => {
-    password = Buffer.from(password, 'base64').toString();
-    
-
-
-    conn.connect(err => {
-        if(err) console.log(err)
+    password = Buffer.from(password, 'base64').toString()
         conn.query(`select * from t_auth where id='${client.id}'`,(err,res,fields) => {
             if(err) console.log(err)
             var key = res[0].symetric_key
@@ -38,7 +44,6 @@ aedes.authenticate = (client, username, password, callback) => {
             const error = new Error('Authentication Failed!! Invalid user credentials.');
             console.log('Error ! Authentication failed.')
             return callback(error, false)
-        }) 
     })
 
  
