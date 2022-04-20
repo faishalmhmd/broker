@@ -112,6 +112,10 @@ fs.readFile('subkey.txt','utf-8',(err,data) => {
         client.on('connect', () => {
             client.subscribe(topic)
         })
+
+        client.on('message',(topic,message) => {
+            console.log(`${message} from ${topic}`)
+        })
     }
 })
 

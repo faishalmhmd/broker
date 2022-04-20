@@ -3,6 +3,7 @@ const aedes = require('aedes')()
 const server = require('net').createServer(aedes.handle)
 const mysql = require('mysql')
 const aes256 = require('aes256')
+const mqtt = require('mqtt')
 
 
 // configuration broker
@@ -18,15 +19,10 @@ var conn = mysql.createConnection({
 
 conn.connect(err => {
     if(err) console.log(err)
-    conn.query(`SELECT * FROM t_auth WHERE id like '%sub%'`,(err,res) => {
-        if(err) console.log(err)
-        res.forEach(el => {
-            console.log(el.id)
-        })
-    })
+   
 })
 
-server.listen(port, function () {
+server.listen(port,() => {
     console.log(`MQTT Broker running on port: ${port}`)
 })
 
@@ -51,10 +47,31 @@ aedes.authenticate = (client, username, password, callback) => {
 
 }
 
-aedes.on('client', function (client) {
+aedes.on('client', client => {
     console.log(`[CLIENT_CONNECTED] Client ${(client ? client.id : client)} connected to broker ${aedes.id}`)
 })
 
-aedes.on('clientDisconnect', function (client) {
+aedes.on('clientDisconnect', client => {
     console.log(`[CLIENT_DISCONNECTED] Client ${(client ? client.id : client)} disconnected from the broker ${aedes.id}`)
+})
+
+aedes.on('publish',async (packet,client) => {
+    if(client) {
+        // conn.query(`SELECT * FROM t_auth WHERE id like '%sub%'`,(err,res) => {
+        //     if(err) console.log(err)
+        //     res.forEach(el => {
+        //         console.log(el.id)
+        //     })
+        // })
+
+        conn.query(`SELECT * FROM t_auth WHERE id='pub-1'`,(err,res) => {
+            if(err) console.log(err)
+            console.log(res[0].symetric_key)
+            let key = res[0].symetric_key
+            let payload = aes256.decrypt(key,Buffer.from(packet.payload,'base64').toString())
+            console.log(`${client.id} has published ${payload}`)
+        })
+
+  
+    }
 })

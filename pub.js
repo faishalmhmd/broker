@@ -111,6 +111,8 @@ fs.readFile('pubkey.txt','utf-8',(err,data) => {
         
         client.on('connect', () => {
             client.subscribe(topic)
+            let payload = aes256.encrypt(key,'helloWorld')
+            client.publish('payload',payload)
         })
     }
 })
