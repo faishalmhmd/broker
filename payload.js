@@ -21,7 +21,7 @@ conn.connect(err => {
     if(err) console.log(err)
    
 })
-
+    
 server.listen(port,() => {
     console.log(`MQTT Broker running on port: ${port}`)
 })
@@ -56,13 +56,18 @@ aedes.on('clientDisconnect', client => {
 })
 
 aedes.on('publish',async (packet,client) => {
+    // conn.query(`SELECT * FROM t_auth WHERE id like '%sub%'`,(err,res) => {
+    //     if(err) console.log(err) 
+    //     console.log(res)
+    // })
     if(client) {
-        // conn.query(`SELECT * FROM t_auth WHERE id like '%sub%'`,(err,res) => {
-        //     if(err) console.log(err)
-        //     res.forEach(el => {
-        //         console.log(el.id)
-        //     })
-        // })
+        let data = false
+        if(data) {
+            console.log('ini di execute')
+        }
+        else{
+            console.log('gak di execute')
+        }
 
         conn.query(`SELECT * FROM t_auth WHERE id='pub-1'`,(err,res) => {
             if(err) console.log(err)
@@ -71,7 +76,5 @@ aedes.on('publish',async (packet,client) => {
             let payload = aes256.decrypt(key,Buffer.from(packet.payload,'base64').toString())
             console.log(`${client.id} has published ${payload}`)
         })
-
-  
     }
 })
