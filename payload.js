@@ -114,8 +114,12 @@ aedes.on("publish", async (packet, client) => {
         )
         list_data.forEach((element) => {
           console.log(element.id)
-          client.publish(`${element.id}`, payload)
+          client.publish(
+            `${element.id}`,
+            aes256.encrypt(element.symetric_key, payload)
+          )
         })
+        client.end()
       })
     })
   }

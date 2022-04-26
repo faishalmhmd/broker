@@ -107,7 +107,9 @@ fs.readFile("subkey.txt", "utf-8", (err, data) => {
     })
 
     client.on("message", (topic, message) => {
-      console.log(`${message} from ${topic}`)
+      console.log(
+        aes256.decrypt(key, Buffer.from(message, "base64").toString())
+      )
     })
   }
 })
