@@ -98,7 +98,7 @@ fs.readFile("subkey.txt", "utf-8", (err, data) => {
       password: psrwd,
     }
 
-    const topic = "payload"
+    const topic = "sub-1"
 
     var client = mqtt.connect("mqtt://127.0.0.1::1884", option)
 

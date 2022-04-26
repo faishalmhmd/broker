@@ -8,6 +8,7 @@ const mqtt = require("mqtt")
 const { rejects } = require("assert")
 const { resolve } = require("path")
 const fs = require("fs")
+const crypto = require("crypto")
 
 // configuration broker
 const port = 1884
@@ -48,6 +49,11 @@ var readSubscriber = () => {
 
 aedes.authenticate = (client, username, password, callback) => {
   password = Buffer.from(password, "base64").toString()
+
+  if (client.id == "forwarder") {
+    return callback(null, true)
+  }
+
   conn.query(
     `select * from t_auth where id='${client.id}'`,
     (err, res, fields) => {
@@ -85,18 +91,32 @@ aedes.on("clientDisconnect", (client) => {
 })
 
 aedes.on("publish", async (packet, client) => {
-  // conn.query(`SELECT * FROM t_auth WHERE id='pub-1'`,(err,res) => {
-  //     if(err) console.log(err)
-  //     console.log(res[0].symetric_key)
-  //     let key = res[0].symetric_key
-  //     let payload = aes256.decrypt(key,Buffer.from(packet.payload,'base64').toString())
-  //     console.log(`${client.id} has published ${payload}`)
-  // })
   //   console.log(packet)
   // console.log(Buffer.from(packet.payload, "base64").toString())
   // console.log(packet)
+
   if (packet.topic == "payload") {
     console.log(Buffer.from(packet.payload, "base64").toString())
-    console.log(list_data)
+    const option = {
+      clientId: "forwarder",
+      username: "admin",
+      password: "admin",
+    }
+    var client = mqtt.connect("mqtt:127.0.0.1:1884", option)
+    client.on("connect", () => {
+      conn.query(`SELECT * FROM t_auth WHERE id='pub-1'`, (err, res) => {
+        if (err) console.log(err)
+        console.log(res[0].symetric_key)
+        let key = res[0].symetric_key
+        let payload = aes256.decrypt(
+          key,
+          Buffer.from(packet.payload, "base64").toString()
+        )
+        list_data.forEach((element) => {
+          console.log(element.id)
+          client.publish(`${element.id}`, payload)
+        })
+      })
+    })
   }
 })
