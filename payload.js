@@ -18,7 +18,7 @@ var conn = mysql.createConnection({
   user: "root",
   password: "",
   database: "db_auth",
-})
+});
 
 var list_data
 
@@ -48,28 +48,28 @@ var readSubscriber = () => {
 }
 
 aedes.authenticate = (client, username, password, callback) => {
-  password = Buffer.from(password, "base64").toString()
+  password = Buffer.from(password, "base64").toString();
 
   if (client.id == "forwarder") {
-    return callback(null, true)
+    return callback(null, true);
   }
 
   conn.query(
     `select * from t_auth where id='${client.id}'`,
     (err, res, fields) => {
-      if (err) console.log(err)
-      var key = res[0].symetric_key
+      if (err) console.log(err);
+      var key = res[0].symetric_key;
 
-      let usrnm = aes256.decrypt(key, username)
-      let psrwd = aes256.decrypt(key, password)
+      let usrnm = aes256.decrypt(key, username);
+      let psrwd = aes256.decrypt(key, password);
       if (usrnm === "admin" && psrwd === "admin") {
-        return callback(null, true)
+        return callback(null, true);
       }
       const error = new Error(
         "Authentication Failed!! Invalid user credentials."
-      )
-      console.log("Error ! Authentication failed.")
-      return callback(error, false)
+      );
+      console.log("Error ! Authentication failed.");
+      return callback(error, false);
     }
   )
 }
@@ -96,7 +96,7 @@ aedes.on("publish", async (packet, client) => {
   // console.log(packet)
 
   if (packet.topic == "payload") {
-    console.log(Buffer.from(packet.payload, "base64").toString())
+    console.log(Buffer.from(packet.payload, "base64").toString());
     const option = {
       clientId: "forwarder",
       username: "admin",
@@ -106,20 +106,26 @@ aedes.on("publish", async (packet, client) => {
     client.on("connect", () => {
       conn.query(`SELECT * FROM t_auth WHERE id='pub-1'`, (err, res) => {
         if (err) console.log(err)
-        console.log(res[0].symetric_key)
+        let sql = `INSERT INTO t_encrypt VALUES ('pub-1','${packet.payload}')`;
+        conn.query(sql, function (err, result) {
+          if (err) throw err
+          console.log(`packet.payload = ${packet.payload}`)
+        })
+        console.log(res[0].symetric_key);
         let key = res[0].symetric_key
         let payload = aes256.decrypt(
           key,
           Buffer.from(packet.payload, "base64").toString()
         )
+        console.log(`decrypt packet payload = ${payload}`)
         list_data.forEach((element) => {
-          console.log(element.id)
+          console.log(element.id);
           client.publish(
             `${element.id}`,
             aes256.encrypt(element.symetric_key, payload)
           )
         })
-        client.end()
+        client.end();
       })
     })
   }
