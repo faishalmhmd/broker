@@ -111,18 +111,18 @@ fs.readFile("subkey.txt", "utf-8", (err, data) => {
 
 
     client.on("message", (topic, message) => {
+
       function ngirimPesan(pesan) {
-        ws.on('open', () => {
-          console.log('ngirim ke ws')
-          ws.send(pesan)
-        })
+        ws.send(pesan)
       }
 
       let decryptmsg = aes256.decrypt(key, Buffer.from(message, "base64").toString())
+
       ngirimPesan(decryptmsg)
 
       console.log(`original message = ${message} decrypt message = ${decryptmsg}`)
 
     })
+
   }
 })
