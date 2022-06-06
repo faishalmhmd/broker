@@ -5,6 +5,7 @@ const fs = require("fs")
 const { exec } = require("child_process")
 const { stdout } = require("process")
 const aes256 = require("aes256")
+const server = require('ws')
 
 fs.readFile("subkey.txt", "utf-8", (err, data) => {
   // if subscriber doesnt have a symetric key
@@ -107,9 +108,8 @@ fs.readFile("subkey.txt", "utf-8", (err, data) => {
     })
 
     client.on("message", (topic, message) => {
-      console.log(`original message = ${message}`, `decrypt message = `,
-        aes256.decrypt(key, Buffer.from(message, "base64").toString())
-      )
+      let decryptmsg = aes256.decrypt(key, Buffer.from(message, "base64").toString())
+      console.log(`original message = ${message} decrypt message = ${decryptmsg}`)
     })
   }
 })
