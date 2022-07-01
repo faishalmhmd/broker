@@ -1,23 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <div id="id">
+<script src="https://cdn.tailwindcss.com"></script>
 
-    </div>
-</body>
-<script>
-    const sock = new WebSocket('ws://127.0.0.1:4000')
-    const log = document.getElementById('id')
-
-    sock.onmessage = event => {
-        console.log(event.data)
-        log.innerHTML += event.data+"<br>"
-    }
-</script>
-</html>
+<div class="d-flex">
+    <div class="">item 1</div>
+    <div class="">item 2</div>
+    <div class="">item 3</div>
+    <div class="">item 4</div>
+</div>

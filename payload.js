@@ -13,6 +13,7 @@ const clc = require('cli-color')
 const http = require('http')
 
 
+
 // konfigutasi broker
 const port = 1884
 
@@ -34,7 +35,8 @@ conn.connect((err) => {
 // API function broker buat jalanin port
 // return: none 
 server.listen(port,() => {
-  console.log(`MQTT Broker running on port: ${port}`)
+  console.log(clc.cyan('Server Admin running on port : 9090'))
+  console.log(clc.yellowBright(`MQTT Broker running on port: ${port}`))
 })
 
 // query buat ngambil data dari db
@@ -135,3 +137,18 @@ aedes.on("publish",async (packet,client) => {
     })
   }
 })
+
+
+http.createServer(function (req,res) {
+  res.write(`  <script src="https://cdn.tailwindcss.com"></script>
+  <body class='bg-slate-100'>
+  <div class='flex'>
+    <div class='border border-gray-200 m-5 py-4 px-6 rounded bg-white drop-shadow-sm text-slate-700 '> Publisher Detail <div class='border-b-4 border-blue-500 rounded-md mt-1 mb-3'></div></div>
+    <div class='border border-gray-200 m-5 py-4 px-6 rounded bg-white drop-shadow-sm text-slate-700'> Subcriber Detail <div class='border-b-4 border-red-500 rounded-md mt-1 mb-3'></div></div>
+    <div class='border border-gray-200 m-5 py-4 px-6 rounded bg-white drop-shadow-sm text-slate-700'> Connected Subscriber <div class='border-b-4 border-yellow-500 rounded-md mt-1 mb-3'></div></div>
+    <div class='border border-gray-200 m-5 py-4 px-6 rounded bg-white drop-shadow-sm text-slate-700'> Encrypted Message <div class='border-b-4 border-green-500 rounded-md mt-1 mb-3'></div></div>
+  </div>
+  </body>
+  `)
+  res.end()
+}).listen(9090)
