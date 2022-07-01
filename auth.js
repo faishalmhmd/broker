@@ -5,28 +5,20 @@ const mqtt = require('mqtt')
 const mysql = require('mysql')
 const crypto = require('crypto')
 
-// configuration broker
+// konfiguras broker
 const port = 1883
 
 server.listen(port,function () {
     console.log(`MQTT Broker running on port: ${port}`)
 })
 
-
+// API function ketika ada yang publish message
+// return: none
 aedes.on('publish',async function (packet,clientBroker) {
     if (clientBroker) {
-        /* 
-        this function will publish public key from broker to topic auth
-        return: none
-         */
 
         console.log(`[MESSAGE_PUBLISHED] Client ${(clientBroker ? clientBroker.id : 'BROKER_' + aedes.id)} has published message on ${packet.payload} `)
         let msg = JSON.parse(packet.payload)
-
-        /* 
-        this function will return a boolean statement if payload can parsing to JSON then will return true
-        return:  boolean
-        */
 
         var publishPubKey = () => {
             const option = {
@@ -47,7 +39,7 @@ aedes.on('publish',async function (packet,clientBroker) {
             console.log(`pubKey Broker = ${pubKey}`)
             console.log(`symetric key = ${symetric_key}`)
             console.log('=============================')
-            // mysql connection
+
             let conn = mysql.createConnection({
                 host: 'localhost',
                 user: 'root',
@@ -62,7 +54,6 @@ aedes.on('publish',async function (packet,clientBroker) {
                     if (err) console.log(err)
                     console.log(`inserted symetric key = ${symetric_key}`)
                 })
-                // console.log(clientBroker.id)
             })
 
             client.on('connect',() => {
@@ -71,12 +62,8 @@ aedes.on('publish',async function (packet,clientBroker) {
             })
         }
 
-
-
-        /* 
-       this function will check payload or message from broker if json
-       return: none        
-       */
+        // function buat cek payload
+        // return: boolean
         var isJson = payload => {
             try {
                 JSON.parse(payload)
@@ -87,7 +74,8 @@ aedes.on('publish',async function (packet,clientBroker) {
             return true
         }
 
-        // check if payload value is JSON
+        // function buat cek payload JSON && include kata pub/sub
+        // return: none
         if (isJson(packet.payload) == true) {
             let id = msg.id
             if (msg.hasOwnProperty('id') && msg.hasOwnProperty('key')) {

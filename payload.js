@@ -10,10 +10,10 @@ const { resolve } = require("path")
 const fs = require("fs")
 const crypto = require("crypto")
 const clc = require('cli-color')
+const http = require('http')
 
 
-
-// configuration broker
+// konfigutasi broker
 const port = 1884
 
 var conn = mysql.createConnection({
@@ -25,14 +25,20 @@ var conn = mysql.createConnection({
 
 var list_data
 
+// API function buat koneksiin ke db
+// return: none
 conn.connect((err) => {
   if (err) console.log(err)
 })
 
+// API function broker buat jalanin port
+// return: none 
 server.listen(port,() => {
   console.log(`MQTT Broker running on port: ${port}`)
 })
 
+// query buat ngambil data dari db
+// return: none
 conn.query(`SELECT * FROM t_auth WHERE id like '%sub%'`,(err,res) => {
   if (err) console.log(err)
   fs.writeFile("subscriber.json",JSON.stringify(res),(err) => {
@@ -41,6 +47,8 @@ conn.query(`SELECT * FROM t_auth WHERE id like '%sub%'`,(err,res) => {
   })
 })
 
+// function to read subcriber
+// return: none
 var readSubscriber = () => {
   fs.readFile("subscriber.json",(err,data) => {
     if (err) throw err
@@ -49,6 +57,8 @@ var readSubscriber = () => {
   })
 }
 
+// API function auth user
+// return: none
 aedes.authenticate = (client,username,password,callback) => {
   password = Buffer.from(password,"base64").toString()
 
@@ -76,21 +86,23 @@ aedes.authenticate = (client,username,password,callback) => {
   )
 }
 
+// API function ketika client terkoneksi
+// return: none
 aedes.on("client",(client) => {
   console.log(clc.blue(`[CLIENT_CONNECTED] Client ${client.id}`))
 })
 
+// API funciton ketika client diskonek
+// return; none
 aedes.on("clientDisconnect",(client) => {
   console.log(clc.red(`[CLIENT_DISCONNECTED] Client  ${client.id}`))
 })
 
-aedes.on("publish",async (packet,client) => {
-  //   console.log(packet)
-  // console.log(Buffer.from(packet.payload, "base64").toString())
-  // console.log(packet)
 
+// API functuon ketika publihser push 
+// return: none
+aedes.on("publish",async (packet,client) => {
   if (packet.topic == "payload") {
-    // console.log(Buffer.from(packet.payload,"base64").toString())
     const option = {
       clientId: "forwarder",
       username: "admin",
@@ -105,7 +117,6 @@ aedes.on("publish",async (packet,client) => {
           if (err) throw err
           console.log(clc.yellow(`Payload = ${packet.payload}`))
         })
-        // console.log(res[0].symetric_key)
         let key = res[0].symetric_key
         let payload = aes256.decrypt(
           key,

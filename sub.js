@@ -6,7 +6,7 @@ const { exec } = require("child_process")
 const { stdout } = require("process")
 const aes256 = require("aes256")
 const Websocket = require('ws')
-const serverWs = 'ws://127.0.0.1:4000'
+// const serverWs = 'ws://127.0.0.1:4000'
 // const ws = new Websocket(serverWs)
 
 fs.readFile("subkey.txt","utf-8",(err,data) => {
