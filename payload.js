@@ -138,7 +138,8 @@ aedes.on("publish",async (packet,client) => {
   }
 })
 
-
+// API function buat http server
+// return: none
 http.createServer(function (req,res) {
   res.write(`  <script src="https://cdn.tailwindcss.com"></script>
   <body class='bg-slate-100'>
