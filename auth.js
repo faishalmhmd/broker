@@ -5,7 +5,7 @@ const mqtt = require('mqtt')
 const mysql = require('mysql')
 const crypto = require('crypto')
 
-// konfiguras broker
+// konfiguras broker 
 const port = 1883
 
 server.listen(port,function () {
