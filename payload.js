@@ -12,11 +12,19 @@ const crypto = require("crypto")
 const clc = require('cli-color')
 const express = require('express')
 
+var statusBrokerPub = 'Belum ada terkoneksi'
+
 var app = express()
 app.set('view engine','ejs')
 
 app.get('/',(req,res) => {
   res.render('pages/index')
+})
+
+app.get('/publisher',(req,res) => {
+  res.render('pages/publisher',{
+    status: statusBrokerPub
+  })
 })
 
 app.listen(8080)
@@ -99,6 +107,9 @@ aedes.authenticate = (client,username,password,callback) => {
 // return: none
 aedes.on("client",(client) => {
   console.log(clc.blue(`[CLIENT_CONNECTED] Client ${client.id}`))
+  if (client.id == 'pub') {
+    this.statusBrokerPub = 'Connected'
+  }
 })
 
 // API funciton ketika client diskonek
