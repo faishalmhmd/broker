@@ -12,7 +12,8 @@ const crypto = require("crypto")
 const clc = require('cli-color')
 const express = require('express')
 
-var statusBrokerPub = 'Belum ada terkoneksi'
+var statusBrokerPub = 'Not Connected '
+var clientidPub
 
 var app = express()
 app.set('view engine','ejs')
@@ -23,7 +24,8 @@ app.get('/',(req,res) => {
 
 app.get('/publisher',(req,res) => {
   res.render('pages/publisher',{
-    status: statusBrokerPub
+    status: statusBrokerPub,
+    client: clientidPub
   })
 })
 
@@ -107,8 +109,9 @@ aedes.authenticate = (client,username,password,callback) => {
 // return: none
 aedes.on("client",(client) => {
   console.log(clc.blue(`[CLIENT_CONNECTED] Client ${client.id}`))
-  if (client.id == 'pub') {
-    this.statusBrokerPub = 'Connected'
+  if (client.id == 'pub-1') {
+    statusBrokerPub = 'Connected'
+    clientidPub = client
   }
 })
 
@@ -116,6 +119,9 @@ aedes.on("client",(client) => {
 // return; none
 aedes.on("clientDisconnect",(client) => {
   console.log(clc.red(`[CLIENT_DISCONNECTED] Client  ${client.id}`))
+  if (client.id == 'pub-1') {
+    statusBrokerPub = 'Disconnected'
+  }
 })
 
 
