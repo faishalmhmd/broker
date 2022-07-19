@@ -12,6 +12,7 @@ const crypto = require("crypto")
 const clc = require('cli-color')
 const express = require('express')
 
+var list_data
 var statusBrokerPub = 'Not Connected '
 var clientidPub
 
@@ -29,6 +30,12 @@ app.get('/publisher',(req,res) => {
   })
 })
 
+app.get('/subscriber',(req,res) => {
+  res.render('pages/subscriber',{
+    data: list_data
+  })
+})
+
 app.listen(8080)
 
 
@@ -42,7 +49,6 @@ var conn = mysql.createConnection({
   database: "db_auth",
 })
 
-var list_data
 
 // API function buat koneksiin ke db
 // return: none
