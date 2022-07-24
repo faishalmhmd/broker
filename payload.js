@@ -14,7 +14,18 @@ const express = require('express')
 
 var list_data
 var statusBrokerPub = 'Not Connected '
-var clientidPub
+var clientidPub = {
+  broker: {
+    id: 'Not Connected'
+  },
+  _parser: {
+    settings: {
+      clientId: 'Not Connected',
+      username: 'Not Connected',
+      password: 'Not Connected'
+    }
+  }
+}
 
 var app = express()
 app.set('view engine','ejs')
@@ -45,7 +56,7 @@ const port = 1884
 var conn = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "1",
+  password: "",
   database: "db_auth",
 })
 

@@ -43,7 +43,7 @@ aedes.on('publish',async function (packet,clientBroker) {
             let conn = mysql.createConnection({
                 host: 'localhost',
                 user: 'root',
-                password: '1',
+                password: '',
                 database: 'db_auth'
             })
 
