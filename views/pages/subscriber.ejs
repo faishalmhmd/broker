@@ -17,11 +17,18 @@
 <body class="bg-gray-200">
     <div class="container mx-auto px-4 py-20 flex flex-col ">
         <% data.forEach(element => {%>
+            <div class="flex">
             <div class="item px-8 py-6 bg-neutral-50 shadow-md mx-4 text-lg rounded-md mt-4">
                 id : <%= element.id %>
                 <br>
                 symetric_key : <%= element.symetric_key %>
             </div>
+            <a href="/hapus/<%=element.id%>">
+                <div class="item px-4 py-2 bg-red-500 shadow-md mx-4 text-lg rounded-md mt-4 pt-8 pb-12">
+                    Hapus Sub
+                </div>  
+            </a>
+        </div>
         <% }) %>
 </div>
 </body>

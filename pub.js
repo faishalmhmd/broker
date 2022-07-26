@@ -115,12 +115,11 @@ fs.readFile('pubkey.txt','utf-8',(err,data) => {
         client.on('connect',() => {
             client.subscribe(topic)
             setInterval(() => {
+                console.time('aes')
                 let payload = aes256.encrypt(key,pesan)
                 client.publish('payload',payload)
-                os.cpuUsage((v) => {
-                    console.log(`cpu usage % ${v}`)
-                })
-            },1000)
+                console.timeEnd('aes')
+            },100)
 
         })
     }

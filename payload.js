@@ -69,6 +69,18 @@ app.get('/status',(req,res) => {
     status: memoryUsage.heapUsed
   })
 })
+
+app.get('/hapus/:id',(req,res) => {
+  console.log(req.params.id)
+  // res.write(`deleted ${req.params.id}`)
+  conn.query(`DELETE  FROM t_auth WHERE id ='${req.params.id}'`,(err,res) => {
+    if (err) console.log(err)
+    fs.writeFile("subscriber.json",JSON.stringify(res),(err) => {
+      if (err) return console.log(err)
+      readSubscriber()
+    })
+  })
+})
 app.listen(8080)
 
 
