@@ -4,10 +4,8 @@ const crypto = require('crypto')
 const fs = require('fs')
 const { exec } = require('child_process')
 const { stdout } = require('process')
-const aes256 = require('aes256')
 const si = require('systeminformation')
 const os = require('os-utils')
-
 
 
 fs.readFile('pubkey.txt','utf-8',(err,data) => {
@@ -100,8 +98,8 @@ fs.readFile('pubkey.txt','utf-8',(err,data) => {
     else {
         // console.log('koneksi ke port 1884')
         const key = data
-        const usrnm = aes256.encrypt(key,'admin')
-        const psrwd = aes256.encrypt(key,'admin')
+        const usrnm = 'admin'
+        const psrwd = 'admin'
         const option = {
             clientId: 'pub-1',
             username: usrnm,
@@ -111,17 +109,17 @@ fs.readFile('pubkey.txt','utf-8',(err,data) => {
         const topic = 'payload'
 
         var client = mqtt.connect('mqtt://127.0.0.1::1884',option)
-        const pesan = 'helloWorld'
+        const pesan = 'heloWorld'
         client.on('connect',() => {
             client.subscribe(topic)
             setInterval(() => {
-                let payload = aes256.encrypt(key,pesan)
+                let payload = pesan
                 client.publish('payload',payload)
+
                 os.cpuUsage((v) => {
                     console.log(`cpu usage % ${v}`)
                 })
             },1000)
-
         })
     }
 })

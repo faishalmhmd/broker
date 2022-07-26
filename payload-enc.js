@@ -128,10 +128,8 @@ aedes.authenticate = (client,username,password,callback) => {
     `select * from t_auth where id='${client.id}'`,
     (err,res,fields) => {
       if (err) console.log(err)
-      var key = res[0].symetric_key
-
-      let usrnm = aes256.decrypt(key,username)
-      let psrwd = aes256.decrypt(key,password)
+      let usrnm = username
+      let psrwd = password
       if (usrnm === "admin" && psrwd === "admin") {
         return callback(null,true)
       }
@@ -184,18 +182,12 @@ aedes.on("publish",async (packet,client) => {
           if (err) throw err
           console.log(clc.yellow(`Payload = ${packet.payload}`))
         })
-        let key = res[0].symetric_key
-        let payload = aes256.decrypt(
-          key,
-          Buffer.from(packet.payload,"base64").toString()
-        )
+        // let key = res[0].symetric_key
+        let payload = Buffer.from(packet.payload,"base64").toString()
         console.log(`Decrpyted = ${payload}`)
         list_data.forEach((element) => {
           console.log(`Forward -> ${element.id}`)
-          client.publish(
-            `${element.id}`,
-            aes256.encrypt(element.symetric_key,payload)
-          )
+          client.publish(payload)
         })
         client.end()
       })
