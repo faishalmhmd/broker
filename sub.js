@@ -6,8 +6,8 @@ const { exec } = require("child_process")
 const { stdout } = require("process")
 const aes256 = require("aes256")
 const Websocket = require('ws')
-// const serverWs = 'ws://127.0.0.1:4000'
-// const ws = new Websocket(serverWs)
+const serverWs = 'ws://127.0.0.1:4000'
+const ws = new Websocket(serverWs)
 
 fs.readFile("subkey.txt","utf-8",(err,data) => {
   // if subscriber doesnt have a symetric key
@@ -109,20 +109,10 @@ fs.readFile("subkey.txt","utf-8",(err,data) => {
       client.subscribe(topic)
     })
 
-
     client.on("message",(topic,message) => {
-
-      // function ngirimPesan(pesan) {
-      //   ws.send(pesan)
-      // }
-
       let decryptmsg = aes256.decrypt(key,Buffer.from(message,"base64").toString())
-
-      // ngirimPesan(decryptmsg)
-
+      ws.send(decryptmsg)
       console.log(`original message = ${message} decrypt message = ${decryptmsg}`)
-
     })
-
   }
 })

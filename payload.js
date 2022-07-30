@@ -13,14 +13,6 @@ const clc = require('cli-color')
 const express = require('express')
 const process = require('process')
 
-const formatMemoryUsage = (data) => `${Math.round(data / 1024 / 1024 * 100) / 100} MB`
-
-const memoryData = process.memoryUsage()
-
-const memoryUsage = {
-  heapUsed: `${formatMemoryUsage(memoryData.heapUsed)}`,
-}
-
 
 var log = []
 var list_data
@@ -38,6 +30,7 @@ var clientidPub = {
   }
 }
 
+// express
 var app = express()
 app.set('view engine','ejs')
 
@@ -208,6 +201,7 @@ aedes.on("publish",async (packet,client) => {
             `${element.id}`,
             aes256.encrypt(element.symetric_key,payload)
           )
+
         })
         client.end()
       })
