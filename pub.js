@@ -114,13 +114,8 @@ fs.readFile('pubkey.txt','utf-8',(err,data) => {
         const pesan = 'helloWorld'
         client.on('connect',() => {
             client.subscribe(topic)
-            setInterval(() => {
-                console.time('aes')
-                let payload = aes256.encrypt(key,pesan)
-                client.publish('payload',payload)
-                console.timeEnd('aes')
-            },100)
-
+            let payload = aes256.encrypt(key,pesan)
+            client.publish('payload',payload)
         })
     }
 })

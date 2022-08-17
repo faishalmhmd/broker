@@ -54,6 +54,11 @@ aedes.on('publish',async function (packet,clientBroker) {
                     if (err) console.log(err)
                     console.log(`inserted symetric key = ${symetric_key}`)
                 })
+                let sql2 = `INSERT INTO t_user(id,username,password) VALUES ('${clientBroker.id}','admin','admin')`
+                conn.query(sql2,(err,res) => {
+                    if (err) console.log(err)
+                    console.log(`username ${clientBroker.id} inserted    `)
+                })
             })
 
             client.on('connect',() => {

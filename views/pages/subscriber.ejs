@@ -29,7 +29,20 @@
                 </div>  
             </a>
         </div>
-        <% }) %>
+        <!-- <% }) %>
+        <% if (data.length == 1) { %>
+            <div class="flex">
+                <div class="item px-8 py-6 bg-neutral-50 shadow-md mx-4 text-lg rounded-md mt-4">
+                    id : <%= data[0].id %>
+                    <br>
+                    symetric_key : <%= data[0].symetric_key %>
+                </div>
+                <a href="/hapus/<%=data[0].id%>">
+                    <div class="item px-4 py-2 bg-red-500 shadow-md mx-4 text-lg rounded-md mt-4 pt-8 pb-12">
+                        Hapus Sub
+                    </div>  
+                </a>
+        <% } %> -->
 </div>
 </body>
 

@@ -30,6 +30,14 @@ var clientidPub = {
   }
 }
 
+const formatMemoryUsage = (data) => `${Math.round(data / 1024 / 1024 * 100) / 100} MB`
+
+const memoryData = process.memoryUsage()
+
+const memoryUsage = {
+  heapUsed: `${formatMemoryUsage(memoryData.heapUsed)}`,
+}
+
 // express
 var app = express()
 app.set('view engine','ejs')
