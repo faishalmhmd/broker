@@ -136,15 +136,16 @@ aedes.authenticate = (client,username,password,callback) => {
   if (client.id == "forwarder") {
     return callback(null,true)
   }
+  console.log(client.id)
+
 
   conn.query(
-    `select * from t_auth where id='${client.id}'`,
+    `select * from t_user where id='${client.id}' AND username='admin' AND password='admin'`,
     (err,res,fields) => {
       if (err) console.log(err)
-      var key = res[0].symetric_key
 
-      let usrnm = aes256.decrypt(key,username)
-      let psrwd = aes256.decrypt(key,password)
+      let usrnm = res[0].username
+      let psrwd = res[0].password
       if (usrnm === "admin" && psrwd === "admin") {
         return callback(null,true)
       }

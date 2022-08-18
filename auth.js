@@ -4,7 +4,7 @@ const server = require('net').createServer(aedes.handle)
 const mqtt = require('mqtt')
 const mysql = require('mysql')
 const crypto = require('crypto')
-
+const aes256 = require("aes256")
 // konfiguras broker 
 const port = 1883
 
@@ -49,15 +49,20 @@ aedes.on('publish',async function (packet,clientBroker) {
 
             conn.connect(err => {
                 if (err) console.log(err)
+                // let usrnm = aes256.encrypt(symetric_key,'admin')
+                // let psswd = aes256.encrypt(symetric_key,'admin')
+
+                let usrnm = 'admin'
+                let psswd = 'admin'
+
                 let sql = `INSERT INTO t_auth(id,symetric_key) VALUES ('${clientBroker.id}','${symetric_key}')`
                 conn.query(sql,(err,res) => {
                     if (err) console.log(err)
                     console.log(`inserted symetric key = ${symetric_key}`)
                 })
-                let sql2 = `INSERT INTO t_user(id,username,password) VALUES ('${clientBroker.id}','admin','admin')`
+                let sql2 = `INSERT INTO t_user(id,username,password) VALUES ('${clientBroker.id}','${usrnm}','${psswd}')`
                 conn.query(sql2,(err,res) => {
                     if (err) console.log(err)
-                    console.log(`username ${clientBroker.id} inserted    `)
                 })
             })
 
